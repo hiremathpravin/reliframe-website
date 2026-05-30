@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ReliFrame — Safety engineering, unified.</title>
-  <meta name="description" content="A unified platform for FTA, GSN, FMEA, RBD and reliability prediction. Built for safety-critical engineering teams." />
+  <title>ReliFrame — Reliability and safety engineering, unified</title>
+  <meta name="description" content="ReliFrame brings FTA, GSN, FMEA, RBD and reliability prediction into one connected platform — with full traceability, team collaboration, and standards compliance built in." />
 
   <!-- Favicons -->
   <link rel="icon" href="public/favicon.ico" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="public/favicon-32.png" />
 
   <!-- Open Graph -->
-  <meta property="og:title" content="ReliFrame — Safety engineering, unified." />
-  <meta property="og:description" content="A unified platform for FTA, GSN, FMEA, RBD and reliability prediction. Built for safety-critical engineering teams." />
+  <meta property="og:title" content="ReliFrame — Reliability and safety engineering, unified" />
+  <meta property="og:description" content="FTA, GSN, FMEA, RBD and reliability prediction in one connected platform." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://reliframe.com" />
   <meta property="og:image" content="https://reliframe.com/public/og-image.png" />
@@ -21,219 +21,1765 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
   <style>
+    /* ─── CSS Custom Properties ───────────────────────────────────── */
     :root {
-      --teal-dark:  #085041;
-      --teal-mid:   #1D9E75;
-      --teal-light: #5DCAA5;
-      --teal-pale:  #9FE1CB;
-      --teal-xp:    #E1F5EE;
-      --dark:       #121413;
-      --off-white:  #FAFAF8;
+      --teal-dark:   #085041;
+      --teal-mid:    #1D9E75;
+      --teal-light:  #5DCAA5;
+      --teal-pale:   #9FE1CB;
+      --teal-xp:     #E1F5EE;
+      --near-black:  #121413;
+      --off-white:   #FAFAF8;
+      --mid-grey:    #5F5E5A;
+
+      --bg:          #121413;
+      --bg-surface:  #181a19;
+      --bg-card:     #1c1f1d;
+      --border:      rgba(93, 202, 165, 0.12);
+      --border-subtle: rgba(255,255,255,0.06);
+      --text-primary: #FAFAF8;
+      --text-muted:  rgba(250, 250, 248, 0.55);
+      --text-dim:    rgba(250, 250, 248, 0.32);
+
+      --radius-sm:   8px;
+      --radius-md:   12px;
+      --radius-lg:   18px;
+      --radius-xl:   24px;
+
+      --shadow-card: 0 1px 3px rgba(0,0,0,0.4), 0 4px 16px rgba(0,0,0,0.25);
+      --shadow-glow: 0 0 40px rgba(29, 158, 117, 0.18);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg:          #FAFAF8;
+        --bg-surface:  #f3f7f5;
+        --bg-card:     #ffffff;
+        --border:      rgba(8, 80, 65, 0.14);
+        --border-subtle: rgba(0,0,0,0.07);
+        --text-primary: #121413;
+        --text-muted:  rgba(18, 20, 19, 0.6);
+        --text-dim:    rgba(18, 20, 19, 0.38);
+        --shadow-card: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+        --shadow-glow: 0 0 40px rgba(29, 158, 117, 0.12);
+      }
+    }
 
-    html, body { height: 100%; }
-
+    /* ─── Reset & Base ────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body {
-      background: var(--dark);
-      color: var(--off-white);
+      background: var(--bg);
+      color: var(--text-primary);
       font-family: 'Outfit', system-ui, sans-serif;
       font-weight: 300;
-      line-height: 1.5;
+      line-height: 1.6;
       -webkit-font-smoothing: antialiased;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    img, svg { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+    button, input { font-family: inherit; }
+
+    /* ─── Typography helpers ──────────────────────────────────────── */
+    .font-serif   { font-family: 'DM Serif Display', serif; }
+    .font-mono    { font-family: 'DM Mono', monospace; }
+    .font-sans    { font-family: 'Outfit', sans-serif; }
+    .italic       { font-style: italic; }
+    .teal         { color: var(--teal-mid); }
+
+    /* ─── Layout ──────────────────────────────────────────────────── */
+    .container {
+      width: 100%;
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    @media (min-width: 768px) {
+      .container { padding: 0 2.5rem; }
     }
 
-    main {
-      flex: 1;
+    /* ─── Fade-in animation (Intersection Observer) ───────────────── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-up.delay-1 { transition-delay: 0.1s; }
+    .fade-up.delay-2 { transition-delay: 0.2s; }
+    .fade-up.delay-3 { transition-delay: 0.3s; }
+    .fade-up.delay-4 { transition-delay: 0.4s; }
+    .fade-up.delay-5 { transition-delay: 0.5s; }
+
+    /* ─── Section label ───────────────────────────────────────────── */
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--teal-light);
       display: flex;
-      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 3rem 1.5rem;
-      gap: 1.75rem;
+      gap: 0.6rem;
+    }
+    .section-label::before {
+      content: '';
+      width: 24px;
+      height: 1.5px;
+      background: var(--teal-mid);
+      flex-shrink: 0;
     }
 
-    /* Logo mark */
-    .logo-mark {
-      width: 72px;
-      height: 72px;
-    }
-
-    /* Wordmark */
-    .wordmark {
-      font-family: 'DM Serif Display', serif;
-      font-size: clamp(2rem, 7vw, 2.75rem);
-      letter-spacing: -0.01em;
+    /* ─── Buttons ─────────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4em;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-md);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.1s ease, box-shadow 0.18s ease;
+      white-space: nowrap;
+      text-decoration: none;
       line-height: 1;
     }
-    .wordmark .reli  { font-weight: 700; color: var(--off-white); }
-    .wordmark .frame { font-style: italic; color: var(--teal-mid); }
+    .btn:focus-visible {
+      outline: 2px solid var(--teal-mid);
+      outline-offset: 3px;
+    }
+    .btn:active { transform: translateY(1px); }
 
-    /* Tagline */
-    .tagline {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      letter-spacing: 0.32em;
-      text-transform: uppercase;
-      color: var(--teal-pale);
-    }
-
-    /* Heading */
-    h1 {
-      font-family: 'DM Serif Display', serif;
-      font-weight: 400;
-      font-size: clamp(2.1rem, 8vw, 4rem);
-      line-height: 1.08;
-      color: var(--off-white);
-      max-width: 16ch;
-    }
-    h1 .unified { font-style: italic; color: var(--teal-mid); }
-
-    /* Sub */
-    .sub {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 300;
-      font-size: clamp(1rem, 2.4vw, 1.2rem);
-      color: var(--teal-pale);
-      max-width: 46ch;
-    }
-
-    /* Form */
-    form {
-      display: flex;
-      gap: 0.6rem;
-      width: 100%;
-      max-width: 440px;
-      margin-top: 0.5rem;
-    }
-    input[type="email"] {
-      flex: 1;
-      min-width: 0;
-      padding: 0.85rem 1.1rem;
-      border: 1px solid rgba(159, 225, 203, 0.25);
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--off-white);
-      font-family: 'Outfit', sans-serif;
-      font-size: 1rem;
-      transition: border-color 0.2s ease, background 0.2s ease;
-    }
-    input[type="email"]::placeholder { color: rgba(159, 225, 203, 0.55); }
-    input[type="email"]:focus {
-      outline: none;
-      border-color: var(--teal-mid);
-      background: rgba(255, 255, 255, 0.07);
-    }
-    button {
-      padding: 0.85rem 1.4rem;
-      border: none;
-      border-radius: 10px;
+    .btn-primary {
       background: var(--teal-mid);
-      color: var(--dark);
+      color: var(--near-black);
+    }
+    .btn-primary:hover {
+      background: var(--teal-light);
+      box-shadow: 0 4px 20px rgba(29, 158, 117, 0.35);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-primary);
+      border: 1.5px solid var(--border);
+    }
+    .btn-ghost:hover {
+      border-color: var(--teal-pale);
+      color: var(--teal-pale);
+    }
+
+    /* ─── NAV ─────────────────────────────────────────────────────── */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      transition: background 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease;
+    }
+    .nav.scrolled {
+      background: rgba(18, 20, 19, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 1px 0 var(--border-subtle);
+    }
+    @media (prefers-color-scheme: light) {
+      .nav.scrolled {
+        background: rgba(250, 250, 248, 0.88);
+      }
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      height: 64px;
+    }
+
+    /* Logo */
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-shrink: 0;
+      text-decoration: none;
+    }
+    .nav-logo-mark {
+      width: 34px;
+      height: 34px;
+    }
+    .nav-wordmark {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.35rem;
+      line-height: 1;
+      letter-spacing: -0.01em;
+    }
+    .nav-wordmark .reli  { color: var(--text-primary); }
+    .nav-wordmark .frame { font-style: italic; color: var(--teal-mid); }
+
+    /* Nav links */
+    .nav-links {
+      display: none;
+      align-items: center;
+      gap: 0.25rem;
+      margin-left: auto;
+    }
+    @media (min-width: 768px) {
+      .nav-links { display: flex; }
+    }
+    .nav-links a {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      padding: 0.45rem 0.75rem;
+      border-radius: var(--radius-sm);
+      transition: color 0.15s, background 0.15s;
+    }
+    .nav-links a:hover {
+      color: var(--text-primary);
+      background: var(--border-subtle);
+    }
+
+    /* Nav CTAs */
+    .nav-ctas {
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      margin-left: 0.5rem;
+    }
+    @media (min-width: 768px) {
+      .nav-ctas { display: flex; }
+    }
+    .btn-nav-ghost {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      background: transparent;
+      color: var(--text-muted);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 400;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      line-height: 1;
+    }
+    .btn-nav-ghost:hover { color: var(--text-primary); border-color: var(--teal-pale); }
+    .btn-nav-primary {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      background: var(--teal-mid);
+      color: var(--near-black);
+      border: none;
+      border-radius: var(--radius-sm);
       font-family: 'Outfit', sans-serif;
       font-weight: 500;
-      font-size: 1rem;
       cursor: pointer;
-      white-space: nowrap;
-      transition: background 0.2s ease, transform 0.1s ease;
+      transition: background 0.15s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      line-height: 1;
     }
-    button:hover { background: var(--teal-light); }
-    button:active { transform: translateY(1px); }
+    .btn-nav-primary:hover { background: var(--teal-light); }
 
-    .form-note {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.72rem;
-      letter-spacing: 0.03em;
-      color: rgba(159, 225, 203, 0.7);
-      margin-top: -0.6rem;
+    /* Hamburger */
+    .nav-hamburger {
+      margin-left: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 38px;
+      height: 38px;
+      padding: 8px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      border-radius: var(--radius-sm);
+      transition: background 0.15s;
     }
+    @media (min-width: 768px) {
+      .nav-hamburger { display: none; }
+    }
+    .nav-hamburger:hover { background: var(--border-subtle); }
+    .nav-hamburger span {
+      display: block;
+      width: 100%;
+      height: 1.5px;
+      background: var(--text-primary);
+      border-radius: 2px;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
-    .thank-you {
-      font-family: 'Outfit', sans-serif;
+    /* Mobile menu */
+    .nav-mobile {
+      display: none;
+      flex-direction: column;
+      gap: 0.25rem;
+      padding: 0.75rem 1.5rem 1.25rem;
+      background: rgba(18, 20, 19, 0.97);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border-subtle);
+    }
+    @media (prefers-color-scheme: light) {
+      .nav-mobile { background: rgba(250, 250, 248, 0.97); }
+    }
+    .nav-mobile.open { display: flex; }
+    @media (min-width: 768px) {
+      .nav-mobile { display: none !important; }
+    }
+    .nav-mobile a {
+      font-size: 1rem;
       font-weight: 400;
-      font-size: 1.05rem;
+      color: var(--text-muted);
+      padding: 0.6rem 0.5rem;
+      border-radius: var(--radius-sm);
+      transition: color 0.15s, background 0.15s;
+    }
+    .nav-mobile a:hover { color: var(--text-primary); background: var(--border-subtle); }
+    .nav-mobile .mobile-ctas {
+      display: flex;
+      gap: 0.5rem;
+      padding-top: 0.75rem;
+      margin-top: 0.25rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .nav-mobile .mobile-ctas a { flex: 1; justify-content: center; }
+
+    /* ─── HERO ────────────────────────────────────────────────────── */
+    .hero {
+      padding: 140px 0 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    @media (min-width: 1024px) {
+      .hero { padding: 160px 0 100px; }
+    }
+
+    /* Background radial glow */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(ellipse at center, rgba(29, 158, 117, 0.13) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    @media (min-width: 1024px) {
+      .hero-grid {
+        grid-template-columns: 1fr 480px;
+        gap: 5rem;
+      }
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--teal-pale);
+      background: rgba(29, 158, 117, 0.06);
+      margin-bottom: 1.5rem;
+    }
+    .hero-eyebrow .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--teal-mid);
+      flex-shrink: 0;
+      animation: pulse-dot 2s ease infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.7); }
+    }
+
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-weight: 400;
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      line-height: 1.06;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+      max-width: 15ch;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--teal-mid);
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.15rem);
+      font-weight: 300;
+      color: var(--text-muted);
+      line-height: 1.7;
+      max-width: 48ch;
+      margin-bottom: 2.25rem;
+    }
+
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-standards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+    .std-pill {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.65rem;
+      border-radius: 100px;
+      border: 1px solid rgba(93, 202, 165, 0.2);
+      color: var(--teal-pale);
+      background: rgba(29, 158, 117, 0.05);
+      white-space: nowrap;
+    }
+
+    /* ─── Hero GSN SVG Diagram ────────────────────────────────────── */
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .gsn-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-card), var(--shadow-glow);
+      width: 100%;
+      max-width: 460px;
+      position: relative;
+    }
+    .gsn-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .gsn-card-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
       color: var(--teal-light);
-      max-width: 440px;
-      min-height: 3.2rem;
+    }
+    .gsn-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .gsn-badge .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: pulse-dot 2s ease infinite;
+    }
+    .gsn-badge .badge-ok { color: #22c55e; }
+    .gsn-badge .badge-warn { color: #f59e0b; }
+
+    /* The actual SVG diagram inside the card */
+    .gsn-diagram {
+      width: 100%;
+      height: auto;
+    }
+
+    /* Node animations */
+    .gsn-node {
+      opacity: 0;
+      animation: gsn-node-in 0.4s ease forwards;
+    }
+    .gsn-node:nth-child(1)  { animation-delay: 0.2s; }
+    .gsn-node:nth-child(2)  { animation-delay: 0.4s; }
+    .gsn-node:nth-child(3)  { animation-delay: 0.6s; }
+    .gsn-node:nth-child(4)  { animation-delay: 0.8s; }
+    .gsn-node:nth-child(5)  { animation-delay: 1.0s; }
+    .gsn-node:nth-child(6)  { animation-delay: 1.2s; }
+    .gsn-node:nth-child(7)  { animation-delay: 1.4s; }
+
+    @keyframes gsn-node-in {
+      from { opacity: 0; transform: scale(0.88); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    /* Edge animations */
+    .gsn-edge {
+      stroke-dasharray: 80;
+      stroke-dashoffset: 80;
+      animation: gsn-edge-in 0.35s ease forwards;
+    }
+    .gsn-edge:nth-child(1) { animation-delay: 0.5s; }
+    .gsn-edge:nth-child(2) { animation-delay: 0.7s; }
+    .gsn-edge:nth-child(3) { animation-delay: 0.9s; }
+    .gsn-edge:nth-child(4) { animation-delay: 1.1s; }
+    .gsn-edge:nth-child(5) { animation-delay: 1.3s; }
+    @keyframes gsn-edge-in {
+      to { stroke-dashoffset: 0; }
+    }
+
+    /* Validation badges inside diagram */
+    .gsn-val {
+      opacity: 0;
+      animation: gsn-val-in 0.3s ease forwards;
+    }
+    .gsn-val:nth-child(1) { animation-delay: 1.6s; }
+    .gsn-val:nth-child(2) { animation-delay: 1.75s; }
+    .gsn-val:nth-child(3) { animation-delay: 1.9s; }
+    .gsn-val:nth-child(4) { animation-delay: 2.05s; }
+    @keyframes gsn-val-in {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── SOCIAL PROOF BAR ────────────────────────────────────────── */
+    .proof-bar {
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+      background: var(--bg-surface);
+      padding: 2rem 0;
+    }
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+    @media (min-width: 640px) {
+      .proof-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    .proof-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+      text-align: center;
+    }
+    .proof-stat {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.5rem, 4vw, 2.1rem);
+      font-weight: 400;
+      color: var(--teal-light);
+      line-height: 1;
+    }
+    .proof-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* ─── PRODUCT SUITE ───────────────────────────────────────────── */
+    .suite {
+      padding: 100px 0;
+    }
+    .suite-header {
+      max-width: 540px;
+      margin-bottom: 3.5rem;
+    }
+    .suite-header h2 {
+      font-family: 'DM Serif Display', serif;
+      font-weight: 400;
+      font-size: clamp(2rem, 4.5vw, 3rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      margin-top: 0.75rem;
+    }
+    .suite-header h2 em {
+      font-style: italic;
+      color: var(--teal-mid);
+    }
+
+    .suite-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    @media (min-width: 640px) {
+      .suite-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 1024px) {
+      .suite-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .product-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      position: relative;
+      transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+    .product-card:hover {
+      box-shadow: var(--shadow-card);
+      transform: translateY(-2px);
+    }
+    .product-card.live {
+      border-color: rgba(29, 158, 117, 0.3);
+    }
+    .product-card.live:hover {
+      border-color: rgba(29, 158, 117, 0.55);
+      box-shadow: var(--shadow-card), 0 0 24px rgba(29, 158, 117, 0.1);
+    }
+    .product-card.indev {
+      border-color: rgba(245, 158, 11, 0.2);
+    }
+    .product-card.indev:hover {
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
       justify-content: center;
+      margin-bottom: 1.1rem;
+      background: rgba(29, 158, 117, 0.1);
+      color: var(--teal-mid);
     }
-    .thank-you[hidden] { display: none; }
+    .product-card.indev .card-icon {
+      background: rgba(245, 158, 11, 0.08);
+      color: #f59e0b;
+    }
+    .product-card.planned .card-icon {
+      background: rgba(255,255,255,0.04);
+      color: var(--mid-grey);
+    }
 
-    /* Footer */
-    footer {
+    .card-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+    .card-desc {
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+
+    .card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
       font-family: 'DM Mono', monospace;
-      font-size: 0.72rem;
-      letter-spacing: 0.04em;
-      color: rgba(250, 250, 248, 0.32);
-      text-align: center;
-      padding: 1.75rem 1.5rem;
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      border-radius: 100px;
+    }
+    .badge-live {
+      background: rgba(34, 197, 94, 0.12);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.25);
+    }
+    .badge-indev {
+      background: rgba(245, 158, 11, 0.1);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.22);
+    }
+    .badge-planned {
+      background: rgba(255,255,255,0.04);
+      color: var(--mid-grey);
+      border: 1px solid var(--border-subtle);
+    }
+    .badge-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: currentColor;
     }
 
-    @media (max-width: 480px) {
-      form { flex-direction: column; }
-      button { width: 100%; }
+    /* ─── FEATURES ────────────────────────────────────────────────── */
+    .features {
+      padding: 100px 0;
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .features-header {
+      margin-bottom: 3.5rem;
+    }
+    .features-header h2 {
+      font-family: 'DM Serif Display', serif;
+      font-weight: 400;
+      font-size: clamp(2rem, 4.5vw, 3rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-top: 0.75rem;
+      max-width: 20ch;
+    }
+
+    .features-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    @media (min-width: 1024px) {
+      .features-layout {
+        grid-template-columns: 1fr 1fr;
+        gap: 5rem;
+      }
+    }
+
+    .feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    .feature-item {
+      display: flex;
+      gap: 1.1rem;
+      align-items: flex-start;
+    }
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      background: rgba(29, 158, 117, 0.1);
+      color: var(--teal-mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .feature-copy h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.02rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
+    }
+    .feature-copy p {
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* Mockup panel */
+    .features-mockup {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-card);
+    }
+    .mockup-topbar {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .mockup-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .mockup-dot.red    { background: #ef4444; opacity: 0.7; }
+    .mockup-dot.amber  { background: #f59e0b; opacity: 0.7; }
+    .mockup-dot.green  { background: #22c55e; opacity: 0.7; }
+    .mockup-topbar-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-left: auto;
+    }
+    .mockup-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .mockup-row {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 0.7fr;
+      gap: 0.5rem;
+      align-items: center;
+      padding: 0.65rem 0.75rem;
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.02);
+      border: 1px solid transparent;
+    }
+    .mockup-row.header-row {
+      background: transparent;
+      padding-bottom: 0.25rem;
+    }
+    .mockup-row.header-row span {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .mockup-row.linked {
+      border-color: rgba(29, 158, 117, 0.2);
+      background: rgba(29, 158, 117, 0.03);
+    }
+    .mockup-row.warn {
+      border-color: rgba(245, 158, 11, 0.2);
+      background: rgba(245, 158, 11, 0.03);
+    }
+    .mockup-cell-main {
+      font-size: 0.78rem;
+      font-weight: 400;
+      color: var(--text-primary);
+    }
+    .mockup-cell-mono {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+    .mockup-cell-link {
+      font-size: 0.72rem;
+      color: var(--teal-light);
+    }
+    .mockup-cell-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.57rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      padding: 0.2rem 0.5rem;
+      border-radius: 100px;
+    }
+    .cb-green { background: rgba(34,197,94,0.12); color: #4ade80; }
+    .cb-amber { background: rgba(245,158,11,0.12); color: #fbbf24; }
+    .cb-grey  { background: rgba(255,255,255,0.05); color: var(--mid-grey); }
+
+    /* ─── STANDARDS STRIP ─────────────────────────────────────────── */
+    .standards {
+      padding: 72px 0;
+    }
+    .standards-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      align-items: flex-start;
+    }
+    @media (min-width: 768px) {
+      .standards-inner {
+        flex-direction: row;
+        align-items: center;
+        gap: 3rem;
+      }
+    }
+    .standards-label-col {
+      flex-shrink: 0;
+    }
+    .standards-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .std-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.64rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.75rem;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      background: var(--bg-card);
+      white-space: nowrap;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+    }
+    .std-tag:hover {
+      color: var(--teal-pale);
+      border-color: rgba(93, 202, 165, 0.35);
+      background: rgba(29, 158, 117, 0.06);
+    }
+
+    /* ─── CTA SECTION ─────────────────────────────────────────────── */
+    .cta-section {
+      padding: 100px 0;
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border-subtle);
+    }
+    .cta-inner {
+      max-width: 580px;
+    }
+    .cta-inner h2 {
+      font-family: 'DM Serif Display', serif;
+      font-weight: 400;
+      font-size: clamp(2rem, 4.5vw, 3rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+    .cta-inner h2 em {
+      font-style: italic;
+      color: var(--teal-mid);
+    }
+    .cta-sub {
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+    .cta-sub strong {
+      color: var(--teal-pale);
+      font-weight: 400;
+    }
+    .cta-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    /* ─── FOOTER ──────────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 3.5rem 0 2rem;
+      background: var(--bg);
+    }
+    .footer-inner {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+    @media (min-width: 768px) {
+      .footer-inner {
+        grid-template-columns: 1.6fr 1fr 1fr 1fr;
+        gap: 3rem;
+      }
+    }
+    .footer-brand {}
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.75rem;
+    }
+    .footer-logo-mark { width: 28px; height: 28px; }
+    .footer-wordmark {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.15rem;
+      line-height: 1;
+    }
+    .footer-wordmark .reli  { color: var(--text-primary); }
+    .footer-wordmark .frame { font-style: italic; color: var(--teal-mid); }
+
+    .footer-tagline {
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      max-width: 26ch;
+    }
+    .footer-domain {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: var(--teal-pale);
+    }
+
+    .footer-col-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 1rem;
+    }
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+    .footer-links a {
+      font-size: 0.875rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      transition: color 0.15s;
+    }
+    .footer-links a:hover { color: var(--teal-pale); }
+
+    .footer-bottom {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+    .footer-copy {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.63rem;
+      letter-spacing: 0.06em;
+      color: var(--text-dim);
+    }
+
+    /* ─── Utility: visually hidden ────────────────────────────────── */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+
+    /* ─── Skip link ───────────────────────────────────────────────── */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 1rem;
+      background: var(--teal-mid);
+      color: var(--near-black);
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-sm);
+      font-weight: 500;
+      font-size: 0.875rem;
+      z-index: 200;
+      transition: top 0.15s;
+    }
+    .skip-link:focus { top: 1rem; }
+
+    /* ─── Focus styles ────────────────────────────────────────────── */
+    :focus-visible {
+      outline: 2px solid var(--teal-mid);
+      outline-offset: 3px;
+    }
+
+    /* ─── Divider line ────────────────────────────────────────────── */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border-subtle);
+    }
+
+    /* ─── Responsive tweaks for suite last card ───────────────────── */
+    @media (min-width: 640px) and (max-width: 1023px) {
+      .suite-grid .product-card:last-child {
+        grid-column: 1 / -1;
+        max-width: calc(50% - 0.5rem);
+      }
     }
   </style>
 </head>
 <body>
-  <main>
-    <!-- Logo mark: 2x2 grid of rounded squares on a teal-pale field, with a dark connecting T-bar -->
-    <svg class="logo-mark" viewBox="0 0 100 100" role="img" aria-label="ReliFrame logo">
-      <rect x="0" y="0" width="100" height="100" rx="22" fill="var(--teal-xp)" />
-      <rect x="14" y="14" width="33" height="33" rx="9" fill="var(--teal-dark)" />
-      <rect x="53" y="14" width="33" height="33" rx="9" fill="var(--teal-light)" />
-      <rect x="14" y="53" width="33" height="33" rx="9" fill="var(--teal-light)" />
-      <rect x="53" y="53" width="33" height="33" rx="9" fill="var(--teal-mid)" />
-      <!-- Connecting T-bar line -->
-      <path d="M50 20 V50 M30 50 H70" stroke="var(--dark)" stroke-width="5" stroke-linecap="round" fill="none" />
-    </svg>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
 
-    <div class="wordmark"><span class="reli">Reli</span><span class="frame">Frame</span></div>
+  <!-- ─── NAV ──────────────────────────────────────────────────────── -->
+  <header role="banner">
+    <nav class="nav" id="main-nav" aria-label="Main navigation">
+      <div class="container">
+        <div class="nav-inner">
+          <!-- Logo -->
+          <a href="/" class="nav-logo" aria-label="ReliFrame home">
+            <svg class="nav-logo-mark" viewBox="0 0 100 100" role="img" aria-hidden="true">
+              <rect x="0" y="0" width="100" height="100" rx="22" fill="var(--teal-xp)"/>
+              <rect x="13" y="13" width="33" height="33" rx="9" fill="var(--teal-dark)"/>
+              <rect x="54" y="13" width="33" height="33" rx="9" fill="var(--teal-light)"/>
+              <rect x="13" y="54" width="33" height="33" rx="9" fill="var(--teal-light)"/>
+              <rect x="54" y="54" width="33" height="33" rx="9" fill="var(--teal-mid)"/>
+              <path d="M50 19 V50 M29.5 50 H70.5" stroke="var(--near-black)" stroke-width="5" stroke-linecap="round" fill="none"/>
+            </svg>
+            <span class="nav-wordmark"><span class="reli">Reli</span><span class="frame">Frame</span></span>
+          </a>
 
-    <div class="tagline">Reliability · Safety · Assurance</div>
+          <!-- Desktop links -->
+          <nav class="nav-links" aria-label="Site sections">
+            <a href="#suite">Products</a>
+            <a href="#standards">Standards</a>
+            <a href="/pricing">Pricing</a>
+            <a href="/docs">Docs</a>
+            <a href="/blog">Blog</a>
+          </nav>
 
-    <h1>Safety engineering, <span class="unified">unified.</span></h1>
+          <!-- Desktop CTAs -->
+          <div class="nav-ctas">
+            <a href="/signin" class="btn-nav-ghost">Sign in</a>
+            <a href="/signup" class="btn-nav-primary">Start free</a>
+          </div>
 
-    <p class="sub">A unified platform for FTA, GSN, FMEA, RBD and reliability prediction. Built for safety-critical engineering teams.</p>
+          <!-- Hamburger -->
+          <button class="nav-hamburger" id="nav-toggle" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open navigation menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+      </div>
 
-    <form id="notify-form" novalidate>
-      <input type="email" id="email" name="email" placeholder="you@company.com" required aria-label="Email address" />
-      <button type="submit">Notify me</button>
-    </form>
-    <p class="form-note">Early access for FTAStudio users</p>
+      <!-- Mobile menu -->
+      <div class="nav-mobile" id="mobile-menu" role="navigation" aria-label="Mobile navigation">
+        <a href="#suite">Products</a>
+        <a href="#standards">Standards</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/docs">Docs</a>
+        <a href="/blog">Blog</a>
+        <div class="mobile-ctas">
+          <a href="/signin" class="btn btn-ghost">Sign in</a>
+          <a href="/signup" class="btn btn-primary">Start free</a>
+        </div>
+      </div>
+    </nav>
+  </header>
 
-    <p class="thank-you" id="thank-you" hidden>Thanks — you're on the list. We'll be in touch.</p>
+  <!-- ─── MAIN ─────────────────────────────────────────────────────── -->
+  <main id="main-content">
+
+    <!-- ─── HERO ───────────────────────────────────────────────────── -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="container">
+        <div class="hero-grid">
+
+          <!-- Left: copy -->
+          <div class="hero-copy">
+            <div class="hero-eyebrow fade-up">
+              <span class="dot" aria-hidden="true"></span>
+              Reliability · Safety · Assurance
+            </div>
+
+            <h1 id="hero-heading" class="fade-up delay-1">
+              Safety engineering,<br><em>unified</em> at last
+            </h1>
+
+            <p class="hero-sub fade-up delay-2">
+              ReliFrame brings FTA, GSN, FMEA, RBD and reliability prediction into one connected platform — with full traceability, team collaboration, and standards compliance built in.
+            </p>
+
+            <div class="hero-ctas fade-up delay-3">
+              <a href="/signup" class="btn btn-primary">Start free →</a>
+              <a href="/demo" class="btn btn-ghost">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M5.5 4.8l4 2.2-4 2.2V4.8z" fill="currentColor"/>
+                </svg>
+                Watch demo
+              </a>
+            </div>
+
+            <div class="hero-standards fade-up delay-4" role="list" aria-label="Standards supported">
+              <span class="std-pill" role="listitem">IEC 61508</span>
+              <span class="std-pill" role="listitem">ISO 26262</span>
+              <span class="std-pill" role="listitem">DO-178C</span>
+              <span class="std-pill" role="listitem">ARP 4761</span>
+              <span class="std-pill" role="listitem">GSN Community Standard</span>
+            </div>
+          </div>
+
+          <!-- Right: GSN diagram card -->
+          <div class="hero-visual fade-up delay-2" aria-hidden="true">
+            <div class="gsn-card" role="img" aria-label="Animated GSN safety case diagram preview">
+              <div class="gsn-card-header">
+                <span class="gsn-card-title">GSN Safety Case — Software Subsystem</span>
+                <div class="gsn-badge">
+                  <span class="dot"></span>
+                  <span class="badge-ok">18 checks</span>
+                  &nbsp;·&nbsp;
+                  <span class="badge-warn">2 warnings</span>
+                </div>
+              </div>
+
+              <!-- Inline SVG GSN diagram -->
+              <svg class="gsn-diagram" viewBox="0 0 420 320" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <marker id="arrow" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+                    <path d="M0,0 L7,3.5 L0,7 Z" fill="rgba(93,202,165,0.45)"/>
+                  </marker>
+                  <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="3" result="blur"/>
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                  </filter>
+                </defs>
+
+                <!-- Edges (drawn behind nodes) -->
+                <g stroke="rgba(93,202,165,0.35)" stroke-width="1.5" fill="none" marker-end="url(#arrow)">
+                  <!-- G1 → G2 -->
+                  <line class="gsn-edge" x1="210" y1="62" x2="106" y2="122"/>
+                  <!-- G1 → S1 -->
+                  <line class="gsn-edge" x1="210" y1="62" x2="210" y2="122"/>
+                  <!-- G1 → G3 -->
+                  <line class="gsn-edge" x1="210" y1="62" x2="314" y2="122"/>
+                  <!-- G3 → Sn1 -->
+                  <line class="gsn-edge" x1="314" y1="158" x2="266" y2="218"/>
+                  <!-- G3 → Sn2 -->
+                  <line class="gsn-edge" x1="314" y1="158" x2="362" y2="218"/>
+                </g>
+
+                <!-- G1 — Root goal -->
+                <g class="gsn-node" transform="translate(210,40)" filter="url(#glow)">
+                  <rect x="-68" y="-22" width="136" height="44" rx="8"
+                        fill="rgba(8,80,65,0.7)" stroke="rgba(29,158,117,0.7)" stroke-width="1.5"/>
+                  <text x="0" y="-5" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" font-weight="500" letter-spacing="1" fill="rgba(159,225,203,0.8)" text-transform="uppercase">GOAL</text>
+                  <text x="0" y="9" text-anchor="middle" font-family="Outfit,sans-serif" font-size="10" font-weight="400" fill="#FAFAF8">Software is acceptably safe</text>
+                  <text x="-60" y="-14" font-family="DM Mono,monospace" font-size="8" font-weight="500" fill="rgba(93,202,165,0.9)">G1</text>
+                </g>
+
+                <!-- G2 -->
+                <g class="gsn-node" transform="translate(100,140)">
+                  <rect x="-58" y="-20" width="116" height="40" rx="8"
+                        fill="rgba(8,80,65,0.5)" stroke="rgba(29,158,117,0.4)" stroke-width="1"/>
+                  <text x="0" y="-5" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" letter-spacing="1" fill="rgba(159,225,203,0.7)">GOAL</text>
+                  <text x="0" y="8" text-anchor="middle" font-family="Outfit,sans-serif" font-size="9.5" fill="#FAFAF8">Hazards mitigated</text>
+                  <text x="-50" y="-13" font-family="DM Mono,monospace" font-size="8" fill="rgba(93,202,165,0.8)">G2</text>
+                </g>
+
+                <!-- S1 — Strategy diamond -->
+                <g class="gsn-node" transform="translate(210,140)">
+                  <polygon points="0,-22 56,0 0,22 -56,0"
+                           fill="rgba(29,80,60,0.5)" stroke="rgba(93,202,165,0.45)" stroke-width="1"/>
+                  <text x="0" y="-7" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" letter-spacing="1" fill="rgba(159,225,203,0.7)">STRATEGY</text>
+                  <text x="0" y="7" text-anchor="middle" font-family="Outfit,sans-serif" font-size="9.5" fill="#FAFAF8">By SIL argument</text>
+                  <text x="-48" y="-14" font-family="DM Mono,monospace" font-size="8" fill="rgba(93,202,165,0.8)">S1</text>
+                </g>
+
+                <!-- G3 -->
+                <g class="gsn-node" transform="translate(314,140)">
+                  <rect x="-58" y="-20" width="116" height="40" rx="8"
+                        fill="rgba(8,80,65,0.5)" stroke="rgba(245,158,11,0.45)" stroke-width="1"/>
+                  <text x="0" y="-5" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" letter-spacing="1" fill="rgba(251,191,36,0.8)">GOAL</text>
+                  <text x="0" y="8" text-anchor="middle" font-family="Outfit,sans-serif" font-size="9.5" fill="#FAFAF8">Process compliant</text>
+                  <text x="-50" y="-13" font-family="DM Mono,monospace" font-size="8" fill="rgba(93,202,165,0.8)">G3</text>
+                </g>
+
+                <!-- Sn1 — Solution circle -->
+                <g class="gsn-node" transform="translate(260,238)">
+                  <circle r="24" fill="rgba(8,80,65,0.55)" stroke="rgba(93,202,165,0.45)" stroke-width="1"/>
+                  <text x="0" y="-5" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" letter-spacing="1" fill="rgba(159,225,203,0.7)">SOLN</text>
+                  <text x="0" y="8" text-anchor="middle" font-family="Outfit,sans-serif" font-size="9" fill="#FAFAF8">FTA ref</text>
+                  <text x="-17" y="-16" font-family="DM Mono,monospace" font-size="8" fill="rgba(93,202,165,0.9)">Sn1</text>
+                </g>
+
+                <!-- Sn2 — Solution circle -->
+                <g class="gsn-node" transform="translate(358,238)">
+                  <circle r="24" fill="rgba(8,80,65,0.55)" stroke="rgba(245,158,11,0.35)" stroke-width="1"/>
+                  <text x="0" y="-5" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" letter-spacing="1" fill="rgba(251,191,36,0.75)">SOLN</text>
+                  <text x="0" y="8" text-anchor="middle" font-family="Outfit,sans-serif" font-size="9" fill="#FAFAF8">FMEA ref</text>
+                  <text x="-17" y="-16" font-family="DM Mono,monospace" font-size="8" fill="rgba(93,202,165,0.9)">Sn2</text>
+                </g>
+
+                <!-- Validation badges -->
+                <g class="gsn-val">
+                  <rect x="6" y="272" width="78" height="20" rx="10" fill="rgba(34,197,94,0.12)" stroke="rgba(34,197,94,0.25)" stroke-width="1"/>
+                  <text x="45" y="286" text-anchor="middle" font-family="DM Mono,monospace" font-size="8.5" font-weight="500" fill="#4ade80">GSN001 ✓</text>
+                </g>
+                <g class="gsn-val">
+                  <rect x="90" y="272" width="78" height="20" rx="10" fill="rgba(34,197,94,0.12)" stroke="rgba(34,197,94,0.25)" stroke-width="1"/>
+                  <text x="129" y="286" text-anchor="middle" font-family="DM Mono,monospace" font-size="8.5" font-weight="500" fill="#4ade80">GSN007 ✓</text>
+                </g>
+                <g class="gsn-val">
+                  <rect x="174" y="272" width="78" height="20" rx="10" fill="rgba(34,197,94,0.12)" stroke="rgba(34,197,94,0.25)" stroke-width="1"/>
+                  <text x="213" y="286" text-anchor="middle" font-family="DM Mono,monospace" font-size="8.5" font-weight="500" fill="#4ade80">GSN018 ✓</text>
+                </g>
+                <g class="gsn-val">
+                  <rect x="258" y="272" width="92" height="20" rx="10" fill="rgba(245,158,11,0.1)" stroke="rgba(245,158,11,0.3)" stroke-width="1"/>
+                  <text x="304" y="286" text-anchor="middle" font-family="DM Mono,monospace" font-size="8.5" font-weight="500" fill="#fbbf24">⚠ 2 warnings</text>
+                </g>
+              </svg>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── SOCIAL PROOF BAR ─────────────────────────────────────────── -->
+    <section class="proof-bar" aria-label="Platform statistics">
+      <div class="container">
+        <dl class="proof-grid">
+          <div class="proof-item fade-up">
+            <dt class="proof-stat">18+</dt>
+            <dd class="proof-label">GSN validations</dd>
+          </div>
+          <div class="proof-item fade-up delay-1">
+            <dt class="proof-stat">6</dt>
+            <dd class="proof-label">Export formats</dd>
+          </div>
+          <div class="proof-item fade-up delay-2">
+            <dt class="proof-stat">IEC 61508</dt>
+            <dd class="proof-label">Aligned</dd>
+          </div>
+          <div class="proof-item fade-up delay-3">
+            <dt class="proof-stat">SOC 2</dt>
+            <dd class="proof-label">In progress</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ─── PRODUCT SUITE ────────────────────────────────────────────── -->
+    <section class="suite" id="suite" aria-labelledby="suite-heading">
+      <div class="container">
+
+        <div class="suite-header">
+          <div class="section-label fade-up">The ReliFrame suite</div>
+          <h2 id="suite-heading" class="fade-up delay-1">One platform,<br><em>every analysis method</em></h2>
+        </div>
+
+        <div class="suite-grid" role="list">
+
+          <!-- FTA -->
+          <article class="product-card live fade-up" role="listitem">
+            <div class="card-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+                <circle cx="11" cy="4" r="2.5"/>
+                <circle cx="4" cy="17" r="2.5"/>
+                <circle cx="18" cy="17" r="2.5"/>
+                <line x1="11" y1="6.5" x2="4" y2="14.5"/>
+                <line x1="11" y1="6.5" x2="18" y2="14.5"/>
+              </svg>
+            </div>
+            <div class="card-name">ReliFrame FTA</div>
+            <p class="card-desc">Fault tree analysis with Boolean logic reduction, minimal cut set enumeration, and qualitative/quantitative evaluation. Full traceability to system hazards.</p>
+            <span class="card-badge badge-live"><span class="badge-dot" aria-hidden="true"></span>Live</span>
+          </article>
+
+          <!-- GSN -->
+          <article class="product-card indev fade-up delay-1" role="listitem">
+            <div class="card-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+                <rect x="8" y="1.5" width="6" height="5" rx="1.5"/>
+                <rect x="2" y="15.5" width="6" height="5" rx="1.5"/>
+                <rect x="14" y="15.5" width="6" height="5" rx="1.5"/>
+                <line x1="11" y1="6.5" x2="5" y2="15.5"/>
+                <line x1="11" y1="6.5" x2="17" y2="15.5"/>
+              </svg>
+            </div>
+            <div class="card-name">ReliFrame GSN</div>
+            <p class="card-desc">Goal structuring notation for structured safety arguments. Build assurance cases with real-time GSN Community Standard validation — GSN001 through GSN018.</p>
+            <span class="card-badge badge-indev"><span class="badge-dot" aria-hidden="true"></span>In development</span>
+          </article>
+
+          <!-- FMEA -->
+          <article class="product-card planned fade-up delay-2" role="listitem">
+            <div class="card-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+                <rect x="2" y="4" width="18" height="14" rx="2"/>
+                <line x1="2" y1="9" x2="20" y2="9"/>
+                <line x1="8" y1="9" x2="8" y2="18"/>
+                <line x1="14" y1="9" x2="14" y2="18"/>
+              </svg>
+            </div>
+            <div class="card-name">ReliFrame FMEA</div>
+            <p class="card-desc">Failure mode and effects analysis with RPN scoring, severity/occurrence/detection ratings, and direct linkage to FTA top events and GSN solutions.</p>
+            <span class="card-badge badge-planned"><span class="badge-dot" aria-hidden="true"></span>Planned</span>
+          </article>
+
+          <!-- RBD -->
+          <article class="product-card planned fade-up delay-3" role="listitem">
+            <div class="card-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+                <rect x="1.5" y="8.5" width="5" height="5" rx="1"/>
+                <rect x="8.5" y="4.5" width="5" height="5" rx="1"/>
+                <rect x="8.5" y="12.5" width="5" height="5" rx="1"/>
+                <rect x="15.5" y="8.5" width="5" height="5" rx="1"/>
+                <line x1="6.5" y1="11" x2="8.5" y2="7"/>
+                <line x1="6.5" y1="11" x2="8.5" y2="15"/>
+                <line x1="13.5" y1="7" x2="15.5" y2="11"/>
+                <line x1="13.5" y1="15" x2="15.5" y2="11"/>
+              </svg>
+            </div>
+            <div class="card-name">ReliFrame RBD</div>
+            <p class="card-desc">Reliability block diagrams with series/parallel, k-of-n voting logic, and Monte Carlo simulation. Compute system reliability over mission time from component data.</p>
+            <span class="card-badge badge-planned"><span class="badge-dot" aria-hidden="true"></span>Planned</span>
+          </article>
+
+          <!-- Predict -->
+          <article class="product-card planned fade-up delay-4" role="listitem">
+            <div class="card-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+                <polyline points="2,16 7,10 11,13 15,6 20,9"/>
+                <circle cx="20" cy="9" r="1.5" fill="currentColor" stroke="none"/>
+              </svg>
+            </div>
+            <div class="card-name">ReliFrame Predict</div>
+            <p class="card-desc">Parts-count and parts-stress reliability prediction per MIL-HDBK-217 and IEC TR 62380. Compute MTBF, FIT rates, and failure rate budgets from your component BOM.</p>
+            <span class="card-badge badge-planned"><span class="badge-dot" aria-hidden="true"></span>Planned</span>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── FEATURES ──────────────────────────────────────────────────── -->
+    <section class="features" id="features" aria-labelledby="features-heading">
+      <div class="container">
+        <div class="features-header">
+          <div class="section-label fade-up">Why ReliFrame</div>
+          <h2 id="features-heading" class="fade-up delay-1">Built for<br>safety engineers</h2>
+        </div>
+
+        <div class="features-layout">
+
+          <!-- Feature list -->
+          <div class="feature-list">
+
+            <div class="feature-item fade-up">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+                  <path d="M3 5h14M3 10h8M3 15h5"/>
+                  <circle cx="15" cy="13" r="3"/>
+                  <line x1="17.1" y1="15.1" x2="19" y2="17"/>
+                </svg>
+              </div>
+              <div class="feature-copy">
+                <h3>Cross-tool traceability</h3>
+                <p>Link FTA basic events to GSN solution nodes. Connect FMEA failure modes to RBD component blocks. Every analysis artefact is traceable across your entire safety case — no manual cross-referencing.</p>
+              </div>
+            </div>
+
+            <div class="feature-item fade-up delay-1">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+                  <path d="M9 11l2 2 4-4"/>
+                  <path d="M4 4h12a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2z"/>
+                </svg>
+              </div>
+              <div class="feature-copy">
+                <h3>Built-in standards validation</h3>
+                <p>GSN001 through GSN018 checked live as you construct your argument. Violations surface inline — before export, before review. Know your safety case is structurally sound at every save.</p>
+              </div>
+            </div>
+
+            <div class="feature-item fade-up delay-2">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+                  <circle cx="7" cy="8" r="3"/>
+                  <circle cx="14" cy="5" r="2.5"/>
+                  <path d="M1 17c0-3 2.7-5 6-5s6 2 6 5"/>
+                  <path d="M14 10c2.2 0 4 1.5 4 3.5"/>
+                </svg>
+              </div>
+              <div class="feature-copy">
+                <h3>Real-time collaboration</h3>
+                <p>Invite team members with role-based access — reviewer, editor, owner. Shared workspaces for cross-functional teams spanning systems, software, and functional safety disciplines.</p>
+              </div>
+            </div>
+
+            <div class="feature-item fade-up delay-3">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+                  <path d="M4 16V8l6-4 6 4v8"/>
+                  <rect x="8" y="11" width="4" height="5" rx="0.5"/>
+                  <path d="M2 16h16"/>
+                </svg>
+              </div>
+              <div class="feature-copy">
+                <h3>Export for any stakeholder</h3>
+                <p>Certification authority packages as PDF. Interchange as JSON. Diagrams as SVG or PNG. Data as CSV or Excel. Six formats — one click. Stop reformatting analysis output by hand.</p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Mockup -->
+          <div class="features-mockup fade-up delay-2" aria-hidden="true">
+            <div class="mockup-topbar">
+              <div class="mockup-dot red"></div>
+              <div class="mockup-dot amber"></div>
+              <div class="mockup-dot green"></div>
+              <span class="mockup-topbar-title">FMEA — Braking Subsystem</span>
+            </div>
+            <div class="mockup-rows">
+              <div class="mockup-row header-row">
+                <span>Failure mode</span>
+                <span>Effect</span>
+                <span>Linked to</span>
+                <span>Status</span>
+              </div>
+              <div class="mockup-row linked">
+                <span class="mockup-cell-main">Valve seal failure</span>
+                <span class="mockup-cell-mono">Loss of pressure</span>
+                <span class="mockup-cell-link">→ FTA/BE-04</span>
+                <span class="mockup-cell-badge cb-green">RPN 24</span>
+              </div>
+              <div class="mockup-row">
+                <span class="mockup-cell-main">Sensor drift &gt;2%</span>
+                <span class="mockup-cell-mono">False reading</span>
+                <span class="mockup-cell-link">→ GSN/Sn3</span>
+                <span class="mockup-cell-badge cb-green">RPN 36</span>
+              </div>
+              <div class="mockup-row warn">
+                <span class="mockup-cell-main">Control unit reset</span>
+                <span class="mockup-cell-mono">Brake release</span>
+                <span class="mockup-cell-link">→ RBD/B-11</span>
+                <span class="mockup-cell-badge cb-amber">RPN 112</span>
+              </div>
+              <div class="mockup-row">
+                <span class="mockup-cell-main">Wiring short</span>
+                <span class="mockup-cell-mono">Signal loss</span>
+                <span class="mockup-cell-badge cb-grey">Unlinked</span>
+                <span class="mockup-cell-badge cb-grey">RPN 48</span>
+              </div>
+              <div class="mockup-row linked">
+                <span class="mockup-cell-main">Caliper seizure</span>
+                <span class="mockup-cell-mono">Drag / lock</span>
+                <span class="mockup-cell-link">→ FTA/BE-07</span>
+                <span class="mockup-cell-badge cb-green">RPN 18</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── STANDARDS STRIP ──────────────────────────────────────────── -->
+    <section class="standards" id="standards" aria-labelledby="standards-heading">
+      <div class="container">
+        <div class="standards-inner">
+          <div class="standards-label-col">
+            <div class="section-label fade-up" id="standards-heading">Standards support</div>
+          </div>
+          <div class="standards-pills fade-up delay-1" role="list" aria-label="Supported standards">
+            <span class="std-tag" role="listitem">IEC 61508</span>
+            <span class="std-tag" role="listitem">ISO 26262</span>
+            <span class="std-tag" role="listitem">DO-178C</span>
+            <span class="std-tag" role="listitem">ARP 4761</span>
+            <span class="std-tag" role="listitem">GSN Community Standard v1</span>
+            <span class="std-tag" role="listitem">MIL-HDBK-217</span>
+            <span class="std-tag" role="listitem">IEC TR 62380</span>
+            <span class="std-tag" role="listitem">IEC 62443</span>
+            <span class="std-tag" role="listitem">Telcordia SR-332</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── CTA SECTION ──────────────────────────────────────────────── -->
+    <section class="cta-section" aria-labelledby="cta-heading">
+      <div class="container">
+        <div class="cta-inner">
+          <div class="section-label fade-up">Get started</div>
+          <h2 id="cta-heading" class="fade-up delay-1">
+            Start building your<br><em>safety case today</em>
+          </h2>
+          <p class="cta-sub fade-up delay-2">
+            Free to start. No credit card required.<br>
+            <strong>FTAStudio users get priority access.</strong>
+          </p>
+          <div class="cta-buttons fade-up delay-3">
+            <a href="/pricing" class="btn btn-ghost">View pricing</a>
+            <a href="/signup" class="btn btn-primary">Start free →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
-  <footer>reliframe.com · © 2026</footer>
+  <!-- ─── FOOTER ────────────────────────────────────────────────────── -->
+  <footer role="contentinfo">
+    <div class="container">
+      <div class="footer-inner">
 
+        <!-- Brand -->
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <svg class="footer-logo-mark" viewBox="0 0 100 100" role="img" aria-hidden="true">
+              <rect x="0" y="0" width="100" height="100" rx="22" fill="var(--teal-xp)"/>
+              <rect x="13" y="13" width="33" height="33" rx="9" fill="var(--teal-dark)"/>
+              <rect x="54" y="13" width="33" height="33" rx="9" fill="var(--teal-light)"/>
+              <rect x="13" y="54" width="33" height="33" rx="9" fill="var(--teal-light)"/>
+              <rect x="54" y="54" width="33" height="33" rx="9" fill="var(--teal-mid)"/>
+              <path d="M50 19 V50 M29.5 50 H70.5" stroke="var(--near-black)" stroke-width="5" stroke-linecap="round" fill="none"/>
+            </svg>
+            <span class="footer-wordmark"><span class="reli">Reli</span><span class="frame">Frame</span></span>
+          </div>
+          <p class="footer-tagline">Reliability and safety engineering, unified.</p>
+          <span class="footer-domain">reliframe.com</span>
+        </div>
+
+        <!-- Products -->
+        <div>
+          <div class="footer-col-title">Products</div>
+          <ul class="footer-links" role="list">
+            <li><a href="/fta">ReliFrame FTA</a></li>
+            <li><a href="/gsn">ReliFrame GSN</a></li>
+            <li><a href="/fmea">ReliFrame FMEA</a></li>
+            <li><a href="/rbd">ReliFrame RBD</a></li>
+            <li><a href="/predict">ReliFrame Predict</a></li>
+          </ul>
+        </div>
+
+        <!-- Resources -->
+        <div>
+          <div class="footer-col-title">Resources</div>
+          <ul class="footer-links" role="list">
+            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="/docs">Docs</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="https://github.com/reliframe" rel="noopener noreferrer">GitHub</a></li>
+          </ul>
+        </div>
+
+        <!-- Legal & contact -->
+        <div>
+          <div class="footer-col-title">Company</div>
+          <ul class="footer-links" role="list">
+            <li><a href="/privacy">Privacy</a></li>
+            <li><a href="/terms">Terms</a></li>
+            <li><a href="mailto:hello@reliframe.com">Contact</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2026 ReliFrame · reliframe.com</p>
+        <p class="footer-copy">Built for safety-critical engineering teams</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ─── SCRIPTS ──────────────────────────────────────────────────── -->
   <script>
     (function () {
-      var form = document.getElementById('notify-form');
-      var note = document.querySelector('.form-note');
-      var thankYou = document.getElementById('thank-you');
+      'use strict';
 
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        var email = document.getElementById('email').value.trim();
-        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-          document.getElementById('email').focus();
-          return;
+      /* ── Sticky nav backdrop on scroll ── */
+      var nav = document.getElementById('main-nav');
+      var lastY = 0;
+      function onScroll() {
+        var y = window.scrollY;
+        if (y > 20) {
+          nav.classList.add('scrolled');
+        } else {
+          nav.classList.remove('scrolled');
         }
-        form.hidden = true;
-        if (note) note.hidden = true;
-        thankYou.hidden = false;
+        lastY = y;
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+
+      /* ── Mobile hamburger ── */
+      var toggle = document.getElementById('nav-toggle');
+      var mobileMenu = document.getElementById('mobile-menu');
+      toggle.addEventListener('click', function () {
+        var isOpen = mobileMenu.classList.contains('open');
+        mobileMenu.classList.toggle('open');
+        toggle.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', String(!isOpen));
+        toggle.setAttribute('aria-label', isOpen ? 'Open navigation menu' : 'Close navigation menu');
       });
+
+      /* Close mobile menu when a link is clicked */
+      mobileMenu.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', function () {
+          mobileMenu.classList.remove('open');
+          toggle.classList.remove('open');
+          toggle.setAttribute('aria-expanded', 'false');
+          toggle.setAttribute('aria-label', 'Open navigation menu');
+        });
+      });
+
+      /* Close menu when clicking outside */
+      document.addEventListener('click', function (e) {
+        if (!nav.contains(e.target)) {
+          mobileMenu.classList.remove('open');
+          toggle.classList.remove('open');
+          toggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      /* ── Intersection Observer for fade-up ── */
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              io.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.fade-up').forEach(function (el) {
+          io.observe(el);
+        });
+      } else {
+        /* Fallback: just show everything */
+        document.querySelectorAll('.fade-up').forEach(function (el) {
+          el.classList.add('visible');
+        });
+      }
+
     })();
   </script>
 </body>
